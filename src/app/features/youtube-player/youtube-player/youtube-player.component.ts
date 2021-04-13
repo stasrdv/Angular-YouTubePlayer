@@ -39,14 +39,14 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
       });
   }
 
-  private getPlayListItems() {
+  private getPlayListItems(): void {
     this.playerApiService.getPlayListItems().pipe(takeUntil(this.cleanupSubject)).subscribe(items => {
       this.playListItems = items.filter(item => item);
     });
   }
 
 
-  onStateChange(event) {
+  onStateChange(event): void {
     this.ytEvent = event.data;
     if (this.ytEvent == 0) {
       this.playListItems.shift();
@@ -66,7 +66,7 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
   }
 
 
-  onVideoSelected($event) {
+  onVideoSelected($event): void {
     const videoId = ObjectUtils.getYouTubeVideoId(this.urlInputControl.value);
     this.playListItems.push(videoId);
     if (this.playListItems.length === 1) {
