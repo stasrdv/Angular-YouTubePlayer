@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" class="ytplayer__header">
+    <span>Youtube Player by Stas Rudevitsky </span>
+    <!-- <span class="primary-spacer"></span> -->
+</mat-toolbar>
+<div class="ytplayer">
+    <form class="ytplayer__form">
+        <div class="ytplayer__form__input">
+            <mat-form-field class="ytplayer__form__input-field">
+                <mat-label>YouTube Video</mat-label>
+                <input type="email" matInput [formControl]="urlInputControl"
+                    placeholder="Please insert a valid video URL">
+                <mat-error *ngIf="urlInputControl.hasError('validUrl')">
+                    Please enter a valid URL
+                </mat-error>
+            </mat-form-field>
+            <button mat-stroked-button color="primary" (click)="onVideoSelected($event)" 
+                [disabled]="urlInputControl.hasError('validUrl')">Add</button>
+        </div>
+        <mat-list role="list">
+            <mat-list-item role="listitem" *ngFor="let item of playListItems">
+                {{ (item | urlFormat) | async}}
+            </mat-list-item>
+        </mat-list>
+    </form>
+    <div class="ytplayer__frame">
+        <youtube-player (ready)="onPlayerReady($event)" (change)="onStateChange($event)">
+        </youtube-player>
+    </div>
+</div>
