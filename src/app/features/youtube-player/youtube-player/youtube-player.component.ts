@@ -1,14 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
-import { Socket } from 'ngx-socket-io';
+import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs/internal/Subject';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { SocketIoService } from 'src/app/shared/services/socket-io.service';
 import { CustomValidators } from 'src/app/shared/utils/custom.validators';
 import { ObjectUtils } from 'src/app/shared/utils/object.utils';
-import { YoutubePlayerApiService } from '../services/youtube-player.api.service';
-import { EMIT_ITEM_KEY } from './constants/constants';
+import { YoutubePlayerApiService } from '../../../core/services/youtube-player.api.service';
+import { YoutubeVideoItem } from '../models/video-item.dto';
+
 
 
 @Component({
@@ -22,9 +22,9 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
   public urlInputControl = new FormControl('', CustomValidators.youtubeUrlValidator);
   private youtubePlayer;
   private ytEvent;
-  public playListItems: string[] = [];
+  public videoItems: YoutubeVideoItem[] = [];
   private cleanupSubject = new Subject<void>();
-  constructor(private socket: Socket, private playerApiService: YoutubePlayerApiService) { }
+  constructor(private playerApiService: YoutubePlayerApiService, private socketService: SocketIoService) { }
 
 
   ngOnInit(): void {
@@ -33,15 +33,15 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToSocketEvent(): void {
-    this.socket.fromEvent(EMIT_ITEM_KEY).pipe(takeUntil(this.cleanupSubject),
-      map(item => item.toString())).subscribe(videoId => {
-        this.playListItems.indexOf(videoId) === -1 ? this.playListItems.push(videoId) : null;
+    this.socketService.onNewVideoAdded().pipe(takeUntil(this.cleanupSubject))
+      .subscribe(videoItem => {
+        !ObjectUtils.isItemInArray(this.videoItems, videoItem) ? this.videoItems.push(videoItem):null;
       });
   }
 
   private getPlayListItems(): void {
     this.playerApiService.getPlayListItems().pipe(takeUntil(this.cleanupSubject)).subscribe(items => {
-      this.playListItems = items.filter(item => item);
+      this.videoItems = items
     });
   }
 
@@ -49,9 +49,9 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
   onStateChange(event): void {
     this.ytEvent = event.data;
     if (this.ytEvent == 0) {
-      this.playListItems.shift();
-      if (this.playListItems.length > 0) {
-        const videoId = this.playListItems[0];
+      this.videoItems.shift();
+      if (this.videoItems.length > 0) {
+        const videoId = this.videoItems[0];
         this.youtubePlayer.loadVideoById(videoId);
       }
     }
@@ -59,25 +59,20 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
 
   onPlayerReady(player): void {
     this.youtubePlayer = player;
-    if (this.playListItems.length > 0) {
-      const videoId = this.playListItems[0];
+    if (this.videoItems.length > 0) {
+      const videoId = this.videoItems[0];
       this.youtubePlayer.loadVideoById(videoId);
     }
   }
 
 
-  onVideoSelected($event): void {
+  onVideoInserted(): void {
     const videoId = ObjectUtils.getYouTubeVideoId(this.urlInputControl.value);
-    this.playListItems.push(videoId);
-    if (this.playListItems.length === 1) {
-      this.youtubePlayer.loadVideoById(videoId);
-    }
-    this.insertVideoId(videoId)
-    this.urlInputControl.setValue('');
-  }
-
-  private insertVideoId(videoId: string): void {
-    this.playerApiService.insertVideoItem(videoId).pipe(takeUntil(this.cleanupSubject)).subscribe(() => console.info(`New item inserted`))
+    this.playerApiService.insertVideoItem(videoId).pipe(takeUntil(this.cleanupSubject)).subscribe((videoItem) => {
+      !ObjectUtils.isItemInArray(this.videoItems, videoItem) ? this.videoItems.push(videoItem) : null;
+      this.videoItems.length === 1 ? this.youtubePlayer.loadVideoById(videoItem.videoId) : null;
+      this.urlInputControl.setValue('');
+    });
   }
 
 

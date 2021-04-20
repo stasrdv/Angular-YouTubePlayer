@@ -12,12 +12,13 @@
                     Please enter a valid URL
                 </mat-error>
             </mat-form-field>
-            <button mat-stroked-button color="primary" (click)="onVideoSelected($event)" 
+            <button mat-stroked-button color="primary" (click)="onVideoInserted()"
                 [disabled]="urlInputControl.hasError('validUrl')">Add</button>
         </div>
         <mat-list role="list">
-            <mat-list-item role="listitem" *ngFor="let item of playListItems">
-                {{ (item | urlFormat) | async}}
+            <mat-list-item role="listitem" *ngFor="let videoItem of videoItems">
+                <span>{{videoItem.title}}</span>
+                <span>{{videoItem.duration}}</span>
             </mat-list-item>
         </mat-list>
     </form>

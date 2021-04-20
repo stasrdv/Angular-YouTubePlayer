@@ -10,22 +10,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { UrlFormatPipe } from './pipes/url-format.pipe';
+import { MatIconModule } from '@angular/material/icon';
 import { CoreModule } from '../core/core.module';
 
 
-
-
-
-
-
 @NgModule({
-  declarations: [UrlFormatPipe],
+  declarations: [],
   imports: [
     CommonModule, BrowserModule, ReactiveFormsModule, BrowserAnimationsModule, MatAutocompleteModule, MatFormFieldModule, FormsModule, MatInputModule, MatListModule,
-    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule
+    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule, MatIconModule
   ],
   exports: [CommonModule, BrowserModule, ReactiveFormsModule, BrowserAnimationsModule, MatAutocompleteModule, MatFormFieldModule, FormsModule, MatInputModule, MatListModule,
-    NgxYoutubePlayerModule, MatButtonModule, UrlFormatPipe, CoreModule, MatToolbarModule]
+    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule, MatIconModule]
 })
 export class SharedModule { }
