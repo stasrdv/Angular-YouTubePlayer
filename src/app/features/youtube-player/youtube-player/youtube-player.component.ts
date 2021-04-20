@@ -8,6 +8,7 @@ import { CustomValidators } from 'src/app/shared/utils/custom.validators';
 import { ObjectUtils } from 'src/app/shared/utils/object.utils';
 import { YoutubePlayerApiService } from '../../../core/services/youtube-player.api.service';
 import { YoutubeVideoItem } from '../models/video-item.dto';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 
 
@@ -31,11 +32,14 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
     this.getPlayListItems();
     this.subscribeToSocketEvent();
   }
-
+  drop(event): void {
+    moveItemInArray(this.videoItems, event.previousIndex, event.currentIndex);
+  }
+  
   private subscribeToSocketEvent(): void {
     this.socketService.onNewVideoAdded().pipe(takeUntil(this.cleanupSubject))
       .subscribe(videoItem => {
-        !ObjectUtils.isItemInArray(this.videoItems, videoItem) ? this.videoItems.push(videoItem):null;
+        !ObjectUtils.isItemInArray(this.videoItems, videoItem) ? this.videoItems.push(videoItem) : null;
       });
   }
 

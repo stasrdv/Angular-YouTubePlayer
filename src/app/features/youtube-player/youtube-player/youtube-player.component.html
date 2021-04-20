@@ -15,8 +15,8 @@
             <button mat-stroked-button color="primary" (click)="onVideoInserted()"
                 [disabled]="urlInputControl.hasError('validUrl')">Add</button>
         </div>
-        <mat-list role="list">
-            <mat-list-item role="listitem" *ngFor="let videoItem of videoItems">
+        <mat-list role="list" cdkDropList (cdkDropListDropped)="drop($event)" class="ytplayer__form__list">
+            <mat-list-item role="listitem" *ngFor="let videoItem of videoItems" cdkDrag>
                 <span>{{videoItem.title}}</span>
                 <span>{{videoItem.duration}}</span>
             </mat-list-item>

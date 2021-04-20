@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxYoutubePlayerModule } from 'ngx-youtube-player';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 import { CoreModule } from '../core/core.module';
 
 
@@ -18,9 +19,9 @@ import { CoreModule } from '../core/core.module';
   declarations: [],
   imports: [
     CommonModule, BrowserModule, ReactiveFormsModule, BrowserAnimationsModule, MatAutocompleteModule, MatFormFieldModule, FormsModule, MatInputModule, MatListModule,
-    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule, MatIconModule
+    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule, MatIconModule,DragDropModule
   ],
   exports: [CommonModule, BrowserModule, ReactiveFormsModule, BrowserAnimationsModule, MatAutocompleteModule, MatFormFieldModule, FormsModule, MatInputModule, MatListModule,
-    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule, MatIconModule]
+    NgxYoutubePlayerModule, MatButtonModule, CoreModule, MatToolbarModule, MatIconModule,DragDropModule]
 })
 export class SharedModule { }
