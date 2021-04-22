@@ -32,10 +32,8 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
     this.getPlayListItems();
     this.subscribeToSocketEvent();
   }
-  drop(event): void {
-    moveItemInArray(this.videoItems, event.previousIndex, event.currentIndex);
-  }
-  
+
+
   private subscribeToSocketEvent(): void {
     this.socketService.onNewVideoAdded().pipe(takeUntil(this.cleanupSubject))
       .subscribe(videoItem => {
@@ -77,6 +75,10 @@ export class YoutubePlayerComponent implements OnInit, OnDestroy {
       this.videoItems.length === 1 ? this.youtubePlayer.loadVideoById(videoItem.videoId) : null;
       this.urlInputControl.setValue('');
     });
+  }
+
+  drop(event): void {
+    moveItemInArray(this.videoItems, event.previousIndex, event.currentIndex);
   }
 
 

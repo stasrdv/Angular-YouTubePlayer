@@ -1,6 +1,8 @@
 @import "../../../../styles/colors.scss";
 
 $list-item-border: #ccc;
+$drag-preview-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 
 .ytplayer {
   padding: 20px;
@@ -65,7 +67,6 @@ mat-list {
   justify-content: space-between;
   border-bottom: 1px solid $list-item-border;
   cursor: pointer;
-  
 }
 iframe {
   width: 100%;
@@ -77,8 +78,10 @@ youtube-player {
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: $drag-preview-shadow;
+  line-height: 48px;
+  opacity: 0.6;
+  font-weight: bold;
 }
 
 .cdk-drag-placeholder {
@@ -88,4 +91,3 @@ youtube-player {
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-
